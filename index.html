@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎁 Canjea tu Recompensa</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        input.valid {
+            border-color: #4caf50;
+        }
+
+        input.invalid {
+            border-color: #f44336;
+        }
+
+        .code-input {
+            text-transform: uppercase;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result.success {
+            background: #d4edda;
+            border: 2px solid #28a745;
+            color: #155724;
+        }
+
+        .result.error {
+            background: #f8d7da;
+            border: 2px solid #dc3545;
+            color: #721c24;
+        }
+
+        .result h3 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .result p {
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        .loader {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .reward-icon {
+            font-size: 4em;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 25px;
+            }
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎁 Tu Recompensa</h1>
+            <p>Ingresa tu código para canjear tu premio</p>
+        </div>
+
+        <form id="redeemForm">
+            <div class="form-group">
+                <label for="code">Código de Token</label>
+                <input 
+                    type="text" 
+                    id="code" 
+                    class="code-input"
+                    placeholder="BLT-XXXX-XXXX"
+                    maxlength="14"
+                    required
+                    autocomplete="off"
+                >
+                <small style="color: #999; font-size: 0.85em;">Formato: XXX-XXXX-XXXX</small>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Tu Email</label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    placeholder="tu@email.com"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Tu Teléfono</label>
+                <input 
+                    type="tel" 
+                    id="phone" 
+                    placeholder="+54 9 11 1234-5678"
+                    required
+                >
+            </div>
+
+            <button type="submit" class="btn" id="submitBtn">
+                🎁 Canjear Ahora
+            </button>
+        </form>
+
+        <div id="result" class="hidden"></div>
+
+        <div class="footer">
+            <p>🔒 Conexión segura</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <script>
+        const API_URL = 'https://script.google.com/macros/s/AKfycbwuAGx7vCunAdVbU6SiUYhx-zPsGPAMUzApxKDRQSMWqWZ5FM47PZQ_cH6ilSzA5t9tMA/exec';
+
+        const form = document.getElementById('redeemForm');
+        const codeInput = document.getElementById('code');
+        const emailInput = document.getElementById('email');
+        const phoneInput = document.getElementById('phone');
+        const submitBtn = document.getElementById('submitBtn');
+        const resultDiv = document.getElementById('result');
+
+        codeInput.addEventListener('input', (e) => {
+            let value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+            
+            if (value.length > 3) {
+                value = value.substring(0, 3) + '-' + value.substring(3);
+            }
+            if (value.length > 8) {
+                value = value.substring(0, 8) + '-' + value.substring(8);
+            }
+            
+            e.target.value = value;
+
+            const pattern = /^[A-Z]{3}-[A-Z0-9]{4}-[A-Z0-9]{4}$/;
+            if (pattern.test(value)) {
+                e.target.classList.add('valid');
+                e.target.classList.remove('invalid');
+            } else if (value.length === 14) {
+                e.target.classList.add('invalid');
+                e.target.classList.remove('valid');
+            } else {
+                e.target.classList.remove('valid', 'invalid');
+            }
+        });
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const code = codeInput.value.trim();
+            const email = emailInput.value.trim();
+            const phone = phoneInput.value.trim();
+
+            if (!code || !email || !phone) {
+                showMessage('⚠️ Por favor completa todos los campos', 'error');
+                return;
+            }
+
+            const pattern = /^[A-Z]{3}-[A-Z0-9]{4}-[A-Z0-9]{4}$/;
+            if (!pattern.test(code)) {
+                showMessage('❌ Formato de código inválido', 'error');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="loader"></span> Procesando...';
+
+            const url = `${API_URL}?action=redeem&code=${code}&email=${email}&phone=${phone}`;
+            window.location.href = url;
+        });
+
+        function showMessage(message, type) {
+            resultDiv.className = `result ${type}`;
+            resultDiv.innerHTML = message;
+            resultDiv.classList.remove('hidden');
+            
+            setTimeout(() => {
+                resultDiv.classList.add('hidden');
+            }, 5000);
+        }
+
+        window.addEventListener('load', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const status = urlParams.get('status');
+            const reward = urlParams.get('reward');
+            const message = urlParams.get('message');
+
+            if (status === 'success') {
+                resultDiv.className = 'result success';
+                resultDiv.innerHTML = `
+                    <div class="reward-icon">🎉</div>
+                    <h3>¡Canje Exitoso!</h3>
+                    <p><strong>${reward || 'Tu recompensa'}</strong></p>
+                    <p>${message || 'Muestra este mensaje en el local para reclamar tu premio'}</p>
+                `;
+                resultDiv.classList.remove('hidden');
+                form.reset();
+                
+                const duration = 3 * 1000;
+                const animationEnd = Date.now() + duration;
+                const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+                function randomInRange(min, max) {
+                    return Math.random() * (max - min) + min;
+                }
+
+                const interval = setInterval(function() {
+                    const timeLeft = animationEnd - Date.now();
+                    if (timeLeft <= 0) {
+                        return clearInterval(interval);
+                    }
+                    const particleCount = 50 * (timeLeft / duration);
+                    confetti(Object.assign({}, defaults, { 
+                        particleCount, 
+                        origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } 
+                    }));
+                    confetti(Object.assign({}, defaults, { 
+                        particleCount, 
+                        origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } 
+                    }));
+                }, 250);
+                
+            } else if (status === 'error') {
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `
+                    <div class="reward-icon">⚠️</div>
+                    <h3>Error en Canje</h3>
+                    <p>${message || 'El código no es válido o ya fue utilizado'}</p>
+                `;
+                resultDiv.classList.remove('hidden');
+            }
+
+            if (status) {
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+        });
+    </script>
+</body>
+</html>
