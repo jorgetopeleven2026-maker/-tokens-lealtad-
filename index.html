@@ -3,22 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Recompensas</title>
+    <title>Token Rewards - Web3 System</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --primary: #6366f1;
-            --primary-dark: #4f46e5;
+            --primary: #8b5cf6;
             --secondary: #ec4899;
+            --accent: #06b6d4;
             --success: #10b981;
             --error: #ef4444;
-            --dark: #1e293b;
-            --light: #f8fafc;
-            --glass: rgba(255, 255, 255, 0.1);
-            --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            --dark: #0f172a;
+            --darker: #020617;
+            --light: #f1f5f9;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
         }
 
         * {
@@ -28,105 +29,119 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            font-family: 'Inter', sans-serif;
+            background: var(--darker);
+            color: white;
             min-height: 100vh;
-            padding: 20px;
-            position: relative;
             overflow-x: hidden;
+            position: relative;
         }
 
-        body::before {
-            content: '';
+        /* FONDO ANIMADO CON GRADIENTES */
+        .animated-bg {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse"><path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
             z-index: 0;
-            pointer-events: none;
+            background: linear-gradient(125deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
         }
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 1;
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
-        /* NAVEGACIÓN */
-        .nav {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 30px;
-            background: var(--glass);
-            backdrop-filter: blur(20px);
-            padding: 8px;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: var(--shadow);
-        }
-
-        .nav-btn {
-            flex: 1;
-            padding: 18px 24px;
-            background: transparent;
-            color: white;
-            border: none;
-            border-radius: 14px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .nav-btn::before {
+        .animated-bg::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
-            opacity: 0;
-            transition: opacity 0.3s;
+            background: radial-gradient(circle at 20% 50%, rgba(139, 92, 246, 0.3) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(236, 72, 153, 0.3) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 20%, rgba(6, 182, 212, 0.3) 0%, transparent 50%);
+            animation: float 20s ease-in-out infinite;
         }
 
-        .nav-btn:hover::before {
-            opacity: 1;
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-30px); }
         }
 
-        .nav-btn.active {
+        .animated-bg::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg width="60" height="60" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse"><path d="M 60 0 L 0 0 0 60" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1"/></pattern></defs><rect width="60" height="60" fill="url(%23grid)"/></svg>');
+            opacity: 0.4;
+        }
+
+        /* PARTÍCULAS FLOTANTES */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
             background: white;
-            color: var(--primary);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: particleFloat 10s infinite;
         }
 
-        .nav-btn .icon {
-            font-size: 20px;
+        @keyframes particleFloat {
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.3;
+            }
+            90% {
+                opacity: 0.3;
+            }
+            100% {
+                transform: translate(100px, -100vh) scale(0);
+            }
         }
 
-        /* SECCIONES */
-        .section {
-            display: none;
-            animation: fadeSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        /* CONTENEDOR PRINCIPAL */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 10;
         }
 
-        .section.active {
-            display: block;
+        /* HEADER */
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            animation: fadeInDown 0.8s ease-out;
         }
 
-        @keyframes fadeSlideIn {
+        @keyframes fadeInDown {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(-30px);
             }
             to {
                 opacity: 1;
@@ -134,138 +149,224 @@
             }
         }
 
-        /* CARDS */
-        .card {
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            letter-spacing: -2px;
+        }
+
+        .tagline {
+            font-size: 1.1em;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 300;
+        }
+
+        /* NAVEGACIÓN */
+        .nav {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 40px;
             background: var(--glass);
             backdrop-filter: blur(20px);
-            border-radius: 24px;
-            padding: 40px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: var(--shadow);
-            margin-bottom: 24px;
+            padding: 10px;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 0.8s ease-out 0.2s both;
         }
 
-        .card-header {
-            margin-bottom: 32px;
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        .card-header h1 {
-            font-size: 2.5em;
-            font-weight: 800;
+        .nav-item {
+            flex: 1;
+            padding: 20px 30px;
+            background: transparent;
+            border: none;
+            border-radius: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            opacity: 0;
+            transition: opacity 0.4s;
+            z-index: -1;
+        }
+
+        .nav-item:hover::before {
+            opacity: 0.1;
+        }
+
+        .nav-item.active {
             color: white;
-            margin-bottom: 8px;
-            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.5);
         }
 
-        .card-header p {
-            color: rgba(255, 255, 255, 0.8);
+        .nav-item .emoji {
+            font-size: 1.2em;
+            margin-right: 8px;
+        }
+
+        /* SECTIONS */
+        .section {
+            display: none;
+            animation: sectionFadeIn 0.6s ease-out;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes sectionFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* GLASS CARD */
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(20px) saturate(180%);
+            border-radius: 24px;
+            padding: 50px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        }
+
+        .card-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.7) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .card-subtitle {
+            color: rgba(255, 255, 255, 0.6);
             font-size: 1.1em;
-            font-weight: 400;
+            margin-bottom: 40px;
+            font-weight: 300;
         }
 
         /* FORMULARIOS */
         .form-group {
-            margin-bottom: 24px;
+            margin-bottom: 28px;
         }
 
         .form-label {
             display: block;
-            color: white;
+            color: rgba(255, 255, 255, 0.9);
             font-weight: 600;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             font-size: 0.95em;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            font-family: 'Space Grotesk', sans-serif;
         }
 
         .form-input {
             width: 100%;
-            padding: 16px 20px;
-            background: rgba(255, 255, 255, 0.95);
-            border: 2px solid transparent;
-            border-radius: 12px;
+            padding: 18px 24px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            color: white;
             font-size: 16px;
             font-weight: 500;
             transition: all 0.3s;
             font-family: 'Inter', sans-serif;
         }
 
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
         .form-input:focus {
             outline: none;
-            background: white;
+            background: rgba(255, 255, 255, 0.08);
             border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
         }
 
         .form-input.code-input {
-            text-transform: uppercase;
-            font-family: 'Courier New', monospace;
+            font-family: 'Space Grotesk', monospace;
             font-weight: 700;
-            letter-spacing: 3px;
-            font-size: 18px;
+            font-size: 20px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            text-align: center;
         }
 
         .form-input.valid {
             border-color: var(--success);
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
         }
 
         .form-input.invalid {
             border-color: var(--error);
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
         }
 
         .form-hint {
             margin-top: 8px;
-            color: rgba(255, 255, 255, 0.7);
+            color: rgba(255, 255, 255, 0.4);
             font-size: 0.85em;
-        }
-
-        /* BOTONES */
-        .btn {
-            width: 100%;
-            padding: 18px 32px;
-            background: white;
-            color: var(--primary);
-            border: none;
-            border-radius: 12px;
-            font-size: 17px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
-        }
-
-        .btn:active {
-            transform: translateY(0);
-        }
-
-        .btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white;
-        }
-
-        .btn-success {
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: white;
+            font-weight: 300;
         }
 
         /* GRID */
         .grid {
             display: grid;
-            gap: 20px;
+            gap: 24px;
         }
 
         .grid-2 {
@@ -276,78 +377,167 @@
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
         }
 
-        /* STATS */
-        .stat-card {
-            background: white;
-            padding: 28px;
+        /* BOTONES */
+        .btn {
+            width: 100%;
+            padding: 20px 40px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
             border-radius: 16px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            font-family: 'Space Grotesk', sans-serif;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(139, 92, 246, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+
+        .btn-success:hover {
+            box-shadow: 0 20px 40px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn .icon {
+            font-size: 1.2em;
+            margin-right: 10px;
+        }
+
+        /* STATS CARDS */
+        .stat-card {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            padding: 32px;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
             text-align: center;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s;
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            opacity: 0;
+            transition: opacity 0.4s;
         }
 
         .stat-card:hover {
-            transform: translateY(-4px);
+            transform: translateY(-8px);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .stat-card:hover::before {
+            opacity: 1;
         }
 
         .stat-icon {
-            font-size: 2.5em;
-            margin-bottom: 12px;
+            font-size: 3em;
+            margin-bottom: 16px;
+            filter: drop-shadow(0 0 10px rgba(139, 92, 246, 0.5));
         }
 
         .stat-value {
-            font-size: 3em;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3.5em;
             font-weight: 800;
-            color: var(--primary);
+            background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.7) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             line-height: 1;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
         }
 
         .stat-label {
-            color: #64748b;
+            color: rgba(255, 255, 255, 0.6);
             font-weight: 600;
-            font-size: 0.95em;
+            font-size: 0.9em;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
         }
 
         /* TOKENS */
         .tokens-container {
-            max-height: 500px;
+            max-height: 600px;
             overflow-y: auto;
-            margin-top: 24px;
+            margin-top: 32px;
             padding-right: 10px;
         }
 
         .tokens-container::-webkit-scrollbar {
-            width: 8px;
+            width: 6px;
         }
 
         .tokens-container::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 10px;
         }
 
         .tokens-container::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.3);
+            background: var(--primary);
             border-radius: 10px;
         }
 
         .token-item {
-            background: white;
-            padding: 20px;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            padding: 24px;
             border-radius: 16px;
             margin-bottom: 16px;
+            border: 1px solid var(--glass-border);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
             transition: all 0.3s;
         }
 
         .token-item:hover {
-            transform: translateX(4px);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+            transform: translateX(8px);
+            border-color: var(--primary);
+            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.2);
         }
 
         .token-info {
@@ -355,16 +545,19 @@
         }
 
         .token-code {
-            font-family: 'Courier New', monospace;
+            font-family: 'Space Grotesk', monospace;
             font-weight: 700;
-            font-size: 1.3em;
-            color: var(--primary);
-            margin-bottom: 6px;
+            font-size: 1.5em;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
         }
 
         .token-meta {
-            color: #64748b;
-            font-size: 0.9em;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.95em;
             font-weight: 500;
         }
 
@@ -372,60 +565,71 @@
             width: 100px;
             height: 100px;
             border-radius: 12px;
+            border: 2px solid var(--primary);
+            padding: 8px;
+            background: white;
         }
 
         /* ALERTAS */
         .alert {
-            padding: 20px 24px;
-            border-radius: 16px;
-            margin-top: 24px;
+            padding: 24px 32px;
+            border-radius: 20px;
+            margin-top: 32px;
             font-weight: 500;
-            animation: slideDown 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: alertSlide 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             border: 2px solid;
+            backdrop-filter: blur(10px);
         }
 
-        @keyframes slideDown {
+        @keyframes alertSlide {
             from {
                 opacity: 0;
-                transform: translateY(-10px);
+                transform: translateY(-20px) scale(0.95);
             }
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateY(0) scale(1);
             }
         }
 
         .alert-success {
-            background: #d1fae5;
+            background: rgba(16, 185, 129, 0.1);
             border-color: var(--success);
-            color: #065f46;
+            color: #d1fae5;
         }
 
         .alert-error {
-            background: #fee2e2;
+            background: rgba(239, 68, 68, 0.1);
             border-color: var(--error);
-            color: #991b1b;
+            color: #fecaca;
         }
 
         .alert h3 {
-            font-size: 1.3em;
-            margin-bottom: 8px;
+            font-size: 1.5em;
+            margin-bottom: 12px;
+            font-family: 'Space Grotesk', sans-serif;
         }
 
         .reward-icon {
-            font-size: 4em;
-            margin: 20px 0;
+            font-size: 5em;
+            margin: 24px 0;
             text-align: center;
+            animation: bounce 1s infinite;
         }
 
-        /* LOGIN */
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* LOGIN MODAL */
         .login-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.9);
             backdrop-filter: blur(10px);
             display: flex;
             align-items: center;
@@ -434,67 +638,71 @@
             animation: fadeIn 0.3s;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
         .login-card {
-            background: white;
-            padding: 50px;
-            border-radius: 24px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            max-width: 450px;
+            background: var(--glass);
+            backdrop-filter: blur(30px);
+            padding: 60px;
+            border-radius: 32px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            max-width: 500px;
             width: 90%;
-            animation: popIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            animation: popIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
 
         @keyframes popIn {
             from {
                 opacity: 0;
-                transform: scale(0.8);
+                transform: scale(0.8) rotate(-5deg);
             }
             to {
                 opacity: 1;
-                transform: scale(1);
+                transform: scale(1) rotate(0);
             }
         }
 
         .login-header {
             text-align: center;
-            margin-bottom: 32px;
+            margin-bottom: 40px;
         }
 
         .login-header .icon {
-            font-size: 4em;
-            margin-bottom: 16px;
+            font-size: 5em;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 20px rgba(139, 92, 246, 0.5));
         }
 
         .login-header h2 {
-            color: var(--dark);
-            font-size: 1.8em;
-            font-weight: 800;
-            margin-bottom: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2em;
+            font-weight: 700;
+            margin-bottom: 12px;
         }
 
         .login-header p {
-            color: #64748b;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 300;
         }
 
-        .password-input-group {
+        .password-group {
             position: relative;
         }
 
         .password-toggle {
             position: absolute;
-            right: 16px;
+            right: 20px;
             top: 50%;
             transform: translateY(-50%);
             background: none;
             border: none;
             cursor: pointer;
-            font-size: 1.2em;
-            color: #64748b;
+            font-size: 1.5em;
+            opacity: 0.5;
+            transition: opacity 0.3s;
+        }
+
+        .password-toggle:hover {
+            opacity: 1;
         }
 
         .hidden {
@@ -503,20 +711,24 @@
 
         /* RESPONSIVE */
         @media (max-width: 768px) {
-            .card {
-                padding: 24px;
-            }
-
-            .card-header h1 {
+            .logo {
                 font-size: 2em;
             }
 
-            .nav-btn {
-                padding: 14px 16px;
+            .glass-card {
+                padding: 30px;
+            }
+
+            .card-title {
+                font-size: 2em;
+            }
+
+            .nav-item {
+                padding: 16px 20px;
                 font-size: 14px;
             }
 
-            .nav-btn .text {
+            .nav-item .text {
                 display: none;
             }
 
@@ -525,42 +737,60 @@
             }
 
             .login-card {
-                padding: 32px;
+                padding: 40px;
             }
         }
 
         /* EFECTOS ESPECIALES */
-        @keyframes confetti {
-            0% { transform: translateY(-100vh) rotate(0deg); }
-            100% { transform: translateY(100vh) rotate(720deg); }
+        .glow {
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% {
+                filter: drop-shadow(0 0 5px rgba(139, 92, 246, 0.5));
+            }
+            50% {
+                filter: drop-shadow(0 0 20px rgba(139, 92, 246, 0.8));
+            }
         }
     </style>
 </head>
 <body>
+    <!-- FONDO ANIMADO -->
+    <div class="animated-bg"></div>
+
+    <!-- PARTÍCULAS -->
+    <div class="particles" id="particles"></div>
+
     <div class="container">
+        <!-- HEADER -->
+        <div class="header">
+            <div class="logo glow">⚡ TOKEN SYSTEM</div>
+            <div class="tagline">Next-Gen Loyalty Rewards Platform</div>
+        </div>
+
         <!-- NAVEGACIÓN -->
         <div class="nav">
-            <button class="nav-btn active" onclick="showSection('redeem')">
-                <span class="icon">🎁</span>
-                <span class="text">Canjear Recompensa</span>
+            <button class="nav-item active" onclick="showSection('redeem')">
+                <span class="emoji">🎁</span>
+                <span class="text">Redeem Tokens</span>
             </button>
-            <button class="nav-btn" onclick="showSection('admin')">
-                <span class="icon">🔐</span>
-                <span class="text">Panel Administrativo</span>
+            <button class="nav-item" onclick="showSection('admin')">
+                <span class="emoji">🔐</span>
+                <span class="text">Admin Panel</span>
             </button>
         </div>
 
         <!-- SECCIÓN: CANJEAR -->
         <div id="redeem-section" class="section active">
-            <div class="card">
-                <div class="card-header">
-                    <h1>🎁 Canjea tu Recompensa</h1>
-                    <p>Ingresa el código que recibiste para reclamar tu premio</p>
-                </div>
+            <div class="glass-card">
+                <h2 class="card-title">Redeem Your Reward</h2>
+                <p class="card-subtitle">Enter your unique token code to claim your prize</p>
 
                 <form id="redeemForm">
                     <div class="form-group">
-                        <label class="form-label">Código de Token</label>
+                        <label class="form-label">Token Code</label>
                         <input 
                             type="text" 
                             id="code" 
@@ -570,23 +800,23 @@
                             required
                             autocomplete="off"
                         >
-                        <div class="form-hint">Formato: XXX-XXXX-XXXX</div>
+                        <div class="form-hint">Format: XXX-XXXX-XXXX</div>
                     </div>
 
                     <div class="grid grid-2">
                         <div class="form-group">
-                            <label class="form-label">Tu Email</label>
+                            <label class="form-label">Email Address</label>
                             <input 
                                 type="email" 
                                 id="email" 
                                 class="form-input"
-                                placeholder="correo@ejemplo.com"
+                                placeholder="your@email.com"
                                 required
                             >
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">Tu Teléfono</label>
+                            <label class="form-label">Phone Number</label>
                             <input 
                                 type="tel" 
                                 id="phone" 
@@ -597,9 +827,9 @@
                         </div>
                     </div>
 
-                    <button type="submit" class="btn btn-primary" id="submitBtn">
-                        <span>✨</span>
-                        <span>Canjear Ahora</span>
+                    <button type="submit" class="btn" id="submitBtn">
+                        <span class="icon">✨</span>
+                        <span>Claim Reward</span>
                     </button>
                 </form>
 
@@ -609,39 +839,38 @@
 
         <!-- SECCIÓN: ADMIN -->
         <div id="admin-section" class="section">
-            <div class="card">
-                <div class="card-header">
-                    <h1>🔐 Panel Administrativo</h1>
-                    <p>Gestiona tokens y visualiza estadísticas en tiempo real</p>
-                </div>
+            <div class="glass-card">
+                <h2 class="card-title">Admin Dashboard</h2>
+                <p class="card-subtitle">Manage tokens and monitor analytics in real-time</p>
 
-                <h2 style="color: white; font-size: 1.5em; margin-bottom: 20px; font-weight: 700;">📊 Estadísticas Generales</h2>
+                <h3 style="color: rgba(255,255,255,0.9); font-size: 1.3em; margin: 40px 0 24px; font-family: 'Space Grotesk', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">📊 Analytics Overview</h3>
+                
                 <div class="grid grid-3">
                     <div class="stat-card">
                         <div class="stat-icon">🎫</div>
                         <div class="stat-value" id="totalGenerated">0</div>
-                        <div class="stat-label">Tokens Generados</div>
+                        <div class="stat-label">Generated</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-icon">✅</div>
                         <div class="stat-value" id="totalRedeemed">0</div>
-                        <div class="stat-label">Tokens Canjeados</div>
+                        <div class="stat-label">Redeemed</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-icon">📈</div>
                         <div class="stat-value" id="redemptionRate">0%</div>
-                        <div class="stat-label">Tasa de Conversión</div>
+                        <div class="stat-label">Rate</div>
                     </div>
                 </div>
 
-                <h2 style="color: white; font-size: 1.5em; margin: 40px 0 20px; font-weight: 700;">🎁 Generar Nuevos Tokens</h2>
+                <h3 style="color: rgba(255,255,255,0.9); font-size: 1.3em; margin: 50px 0 24px; font-family: 'Space Grotesk', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">🎁 Generate New Tokens</h3>
                 
                 <div id="alert" class="hidden"></div>
 
                 <form id="generateForm">
                     <div class="grid grid-2">
                         <div class="form-group">
-                            <label class="form-label">Prefijo del Negocio</label>
+                            <label class="form-label">Business Prefix</label>
                             <input 
                                 type="text" 
                                 id="prefix" 
@@ -654,17 +883,17 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">Tipo de Recompensa</label>
+                            <label class="form-label">Reward Type</label>
                             <select id="value" class="form-input" required>
-                                <option value="20">🍟 Papas Fritas (20 pts)</option>
-                                <option value="50" selected>🍔 Hamburguesa (50 pts)</option>
-                                <option value="100">🍺 Cerveza Artesanal (100 pts)</option>
-                                <option value="200">🎉 Combo Premium (200 pts)</option>
+                                <option value="20">🍟 Fries (20 pts)</option>
+                                <option value="50" selected>🍔 Burger (50 pts)</option>
+                                <option value="100">🍺 Beer (100 pts)</option>
+                                <option value="200">🎉 Premium Combo (200 pts)</option>
                             </select>
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">Cantidad de Tokens</label>
+                            <label class="form-label">Quantity</label>
                             <input 
                                 type="number" 
                                 id="quantity" 
@@ -677,19 +906,19 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">Email del Cliente (opcional)</label>
+                            <label class="form-label">Customer Email (Optional)</label>
                             <input 
                                 type="email" 
                                 id="customerEmail" 
                                 class="form-input"
-                                placeholder="cliente@ejemplo.com"
+                                placeholder="customer@email.com"
                             >
                         </div>
                     </div>
 
                     <button type="submit" class="btn btn-success" id="generateBtn">
-                        <span>🎁</span>
-                        <span>Generar Tokens</span>
+                        <span class="icon">⚡</span>
+                        <span>Generate Tokens</span>
                     </button>
                 </form>
 
@@ -703,29 +932,29 @@
         <div class="login-card">
             <div class="login-header">
                 <div class="icon">🔐</div>
-                <h2>Acceso Restringido</h2>
-                <p>Ingresa la contraseña de administrador</p>
+                <h2>Admin Access</h2>
+                <p>Enter admin password to continue</p>
             </div>
             <form id="loginForm">
                 <div class="form-group">
-                    <div class="password-input-group">
+                    <div class="password-group">
                         <input 
                             type="password" 
                             id="passwordInput" 
                             class="form-input"
-                            placeholder="Contraseña"
+                            placeholder="Password"
                             required
                             autofocus
-                            style="padding-right: 50px;"
+                            style="padding-right: 60px;"
                         >
                         <button type="button" class="password-toggle" onclick="togglePassword()">
                             👁️
                         </button>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary">
-                    <span>🔓</span>
-                    <span>Acceder</span>
+                <button type="submit" class="btn">
+                    <span class="icon">🔓</span>
+                    <span>Access Panel</span>
                 </button>
                 <div id="loginError" class="hidden" style="margin-top: 16px; color: var(--error); text-align: center; font-weight: 600;"></div>
             </form>
@@ -739,31 +968,45 @@
         // CONFIGURACIÓN
         // ====================================
         const API_URL = 'https://script.google.com/macros/s/AKfycbwuAGx7vCunAdVbU6SiUYhx-zPsGPAMUzApxKDRQSMWqWZ5FM47PZQ_cH6ilSzA5t9tMA/exec';
-        const ADMIN_PASSWORD = 'admin2024'; // ⚠️ CAMBIA ESTA CONTRASEÑA
+        const ADMIN_PASSWORD = 'admin2024';
 
         let isAdminAuthenticated = false;
+
+        // ====================================
+        // PARTÍCULAS
+        // ====================================
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 10 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        createParticles();
 
         // ====================================
         // NAVEGACIÓN
         // ====================================
         function showSection(section) {
-            // Si intenta acceder a admin y no está autenticado
             if (section === 'admin' && !isAdminAuthenticated) {
                 showLogin();
                 return;
             }
 
-            // Ocultar todas las secciones
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
 
-            // Mostrar sección seleccionada
             if (section === 'redeem') {
                 document.getElementById('redeem-section').classList.add('active');
-                document.querySelectorAll('.nav-btn')[0].classList.add('active');
+                document.querySelectorAll('.nav-item')[0].classList.add('active');
             } else {
                 document.getElementById('admin-section').classList.add('active');
-                document.querySelectorAll('.nav-btn')[1].classList.add('active');
+                document.querySelectorAll('.nav-item')[1].classList.add('active');
                 loadStats();
             }
         }
@@ -796,7 +1039,7 @@
                 document.getElementById('passwordInput').value = '';
                 document.getElementById('loginError').classList.add('hidden');
             } else {
-                document.getElementById('loginError').textContent = '❌ Contraseña incorrecta';
+                document.getElementById('loginError').textContent = '❌ Incorrect password';
                 document.getElementById('loginError').classList.remove('hidden');
                 document.getElementById('passwordInput').value = '';
                 document.getElementById('passwordInput').focus();
@@ -845,18 +1088,18 @@
             const phone = phoneInput.value.trim();
 
             if (!code || !email || !phone) {
-                showMessage('⚠️ Por favor completa todos los campos', 'error');
+                showMessage('⚠️ Please complete all fields', 'error');
                 return;
             }
 
             const pattern = /^[A-Z]{3}-[A-Z0-9]{4}-[A-Z0-9]{4}$/;
             if (!pattern.test(code)) {
-                showMessage('❌ Formato de código inválido', 'error');
+                showMessage('❌ Invalid code format', 'error');
                 return;
             }
 
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span>⏳</span><span>Procesando...</span>';
+            submitBtn.innerHTML = '<span class="icon">⏳</span><span>Processing...</span>';
 
             const url = `${API_URL}?action=redeem&code=${code}&email=${email}&phone=${phone}`;
             window.location.href = url;
@@ -883,9 +1126,9 @@
                 resultDiv.className = 'alert alert-success';
                 resultDiv.innerHTML = `
                     <div class="reward-icon">🎉</div>
-                    <h3>¡Canje Exitoso!</h3>
-                    <p style="font-size: 1.2em; margin: 12px 0;"><strong>${reward || 'Tu recompensa'}</strong></p>
-                    <p>${message || 'Muestra este mensaje en el local para reclamar tu premio'}</p>
+                    <h3>Redemption Successful!</h3>
+                    <p style="font-size: 1.3em; margin: 16px 0;"><strong>${reward || 'Your reward'}</strong></p>
+                    <p>${message || 'Show this message at the store to claim your prize'}</p>
                 `;
                 resultDiv.classList.remove('hidden');
                 form.reset();
@@ -897,8 +1140,8 @@
                 resultDiv.className = 'alert alert-error';
                 resultDiv.innerHTML = `
                     <div class="reward-icon">⚠️</div>
-                    <h3>Error en Canje</h3>
-                    <p>${message || 'El código no es válido o ya fue utilizado'}</p>
+                    <h3>Redemption Failed</h3>
+                    <p>${message || 'Code is invalid or already used'}</p>
                 `;
                 resultDiv.classList.remove('hidden');
             }
@@ -909,7 +1152,7 @@
         });
 
         function launchConfetti() {
-            const duration = 3 * 1000;
+            const duration = 4 * 1000;
             const animationEnd = Date.now() + duration;
 
             const interval = setInterval(() => {
@@ -919,16 +1162,13 @@
                 }
 
                 confetti({
-                    particleCount: 50,
-                    angle: 60,
-                    spread: 55,
-                    origin: { x: 0 }
-                });
-                confetti({
-                    particleCount: 50,
-                    angle: 120,
-                    spread: 55,
-                    origin: { x: 1 }
+                    particleCount: 100,
+                    startVelocity: 30,
+                    spread: 360,
+                    origin: {
+                        x: Math.random(),
+                        y: Math.random() - 0.2
+                    }
                 });
             }, 250);
         }
@@ -969,36 +1209,37 @@
             const customerEmail = document.getElementById('customerEmail').value;
 
             if (prefix.length !== 3 || !/^[A-Z]+$/.test(prefix)) {
-                showAlert('El prefijo debe ser exactamente 3 letras', 'error');
+                showAlert('Prefix must be exactly 3 letters', 'error');
                 return;
             }
 
             generateBtn.disabled = true;
-            generateBtn.innerHTML = '<span>⏳</span><span>Generando...</span>';
+            generateBtn.innerHTML = '<span class="icon">⏳</span><span>Generating...</span>';
 
             try {
                 const response = await fetch(`${API_URL}?action=generate&prefix=${prefix}&value=${value}&quantity=${quantity}&email=${customerEmail}`);
                 const data = await response.json();
 
                 if (data.success) {
-                    showAlert(`✅ ${quantity} token(s) generado(s) exitosamente`, 'success');
+                    showAlert(`✅ ${quantity} token(s) generated successfully`, 'success');
                     displayTokens(data.tokens);
                     loadStats();
                     generateForm.reset();
                     document.getElementById('prefix').value = 'BLT';
                 } else {
-                    showAlert('❌ Error generando tokens: ' + data.message, 'error');
+                    showAlert('❌ Error generating tokens: ' + data.message, 'error');
                 }
             } catch (error) {
-                showAlert('❌ Error de conexión con el servidor', 'error');
+                showAlert('❌ Connection error', 'error');
+                console.error('Generate error:', error);
             } finally {
                 generateBtn.disabled = false;
-                generateBtn.innerHTML = '<span>🎁</span><span>Generar Tokens</span>';
+                generateBtn.innerHTML = '<span class="icon">⚡</span><span>Generate Tokens</span>';
             }
         });
 
         function displayTokens(tokens) {
-            generatedTokensDiv.innerHTML = '<h3 style="color: white; font-size: 1.3em; margin-bottom: 16px; font-weight: 700;">✨ Tokens Generados</h3>';
+            generatedTokensDiv.innerHTML = '<h3 style="color: rgba(255,255,255,0.9); font-size: 1.3em; margin-bottom: 20px; font-family: \'Space Grotesk\', sans-serif; font-weight: 700;">✨ Generated Tokens</h3>';
             
             tokens.forEach(token => {
                 const tokenDiv = document.createElement('div');
@@ -1006,9 +1247,9 @@
                 tokenDiv.innerHTML = `
                     <div class="token-info">
                         <div class="token-code">${token.code}</div>
-                        <div class="token-meta">💎 ${token.value} puntos • ${getRewardName(token.value)}</div>
+                        <div class="token-meta">💎 ${token.value} points • ${getRewardName(token.value)}</div>
                     </div>
-                    <img src="${token.qrCode}" alt="QR Code" class="token-qr">
+                    <img src="${token.qrCode}" alt="QR" class="token-qr">
                 `;
                 generatedTokensDiv.appendChild(tokenDiv);
             });
@@ -1018,12 +1259,12 @@
 
         function getRewardName(value) {
             const rewards = {
-                20: '🍟 Papas Fritas',
-                50: '🍔 Hamburguesa',
-                100: '🍺 Cerveza Artesanal',
-                200: '🎉 Combo Premium'
+                20: '🍟 Fries',
+                50: '🍔 Burger',
+                100: '🍺 Beer',
+                200: '🎉 Premium Combo'
             };
-            return rewards[value] || 'Recompensa';
+            return rewards[value] || 'Reward';
         }
 
         function showAlert(message, type) {
@@ -1036,7 +1277,6 @@
             }, 5000);
         }
 
-        // Cargar estadísticas cada 30 segundos si está en admin
         setInterval(() => {
             if (document.getElementById('admin-section').classList.contains('active')) {
                 loadStats();
