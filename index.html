@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎁 Canjea tu Recompensa</title>
+    <title>🎁 Sistema de Tokens</title>
     
     <style>
         * {
@@ -16,36 +16,66 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             padding: 20px;
         }
 
         .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* PESTAÑAS */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.2em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            background: white;
+            color: #667eea;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .tab:hover {
+            transform: translateY(-2px);
+        }
+
+        /* CONTENIDO DE PESTAÑAS */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* CARDS */
+        .card {
             background: white;
             border-radius: 20px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             padding: 40px;
-            max-width: 500px;
-            width: 100%;
-            animation: slideUp 0.5s ease-out;
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
         .header h1 {
@@ -59,6 +89,7 @@
             font-size: 1.1em;
         }
 
+        /* FORMULARIOS */
         .form-group {
             margin-bottom: 20px;
         }
@@ -68,10 +99,9 @@
             color: #333;
             font-weight: 600;
             margin-bottom: 8px;
-            font-size: 0.95em;
         }
 
-        input {
+        input, select {
             width: 100%;
             padding: 15px;
             border: 2px solid #e0e0e0;
@@ -80,7 +110,7 @@
             transition: all 0.3s;
         }
 
-        input:focus {
+        input:focus, select:focus {
             outline: none;
             border-color: #667eea;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
@@ -120,41 +150,83 @@
             box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
         }
 
-        .btn:active {
-            transform: translateY(0);
-        }
-
         .btn:disabled {
             background: #ccc;
             cursor: not-allowed;
             transform: none;
         }
 
-        .result {
+        /* ESTADÍSTICAS */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 3em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .stat-label {
+            font-size: 1em;
+            opacity: 0.9;
+        }
+
+        /* TOKENS GENERADOS */
+        .tokens-list {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+
+        .token-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .token-code {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #2a5298;
+        }
+
+        .token-qr {
+            width: 100px;
+            height: 100px;
+        }
+
+        /* ALERTAS */
+        .result, .alert {
             margin-top: 20px;
             padding: 20px;
             border-radius: 10px;
             animation: slideDown 0.3s ease-out;
         }
 
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .result.success {
+        .result.success, .alert-success {
             background: #d4edda;
             border: 2px solid #28a745;
             color: #155724;
         }
 
-        .result.error {
+        .result.error, .alert-error {
             background: #f8d7da;
             border: 2px solid #dc3545;
             color: #721c24;
@@ -165,108 +237,178 @@
             margin-bottom: 10px;
         }
 
-        .result p {
-            font-size: 1.1em;
-            line-height: 1.6;
-        }
-
-        .loader {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,.3);
-            border-radius: 50%;
-            border-top-color: #fff;
-            animation: spin 1s ease-in-out infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
         .reward-icon {
             font-size: 4em;
             text-align: center;
             margin: 20px 0;
         }
 
-        .footer {
-            text-align: center;
-            margin-top: 30px;
-            color: #666;
-            font-size: 0.9em;
-        }
-
-        .footer a {
-            color: #667eea;
-            text-decoration: none;
-        }
-
         .hidden {
             display: none;
         }
 
-        @media (max-width: 600px) {
-            .container {
-                padding: 25px;
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
             }
-            .header h1 {
-                font-size: 2em;
+            .card {
+                padding: 25px;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>🎁 Tu Recompensa</h1>
-            <p>Ingresa tu código para canjear tu premio</p>
+        <!-- PESTAÑAS -->
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('redeem')">
+                🎁 Canjear Token
+            </button>
+            <button class="tab" onclick="showTab('admin')">
+                🔐 Panel Admin
+            </button>
         </div>
 
-        <form id="redeemForm">
-            <div class="form-group">
-                <label for="code">Código de Token</label>
-                <input 
-                    type="text" 
-                    id="code" 
-                    class="code-input"
-                    placeholder="BLT-XXXX-XXXX"
-                    maxlength="14"
-                    required
-                    autocomplete="off"
-                >
-                <small style="color: #999; font-size: 0.85em;">Formato: XXX-XXXX-XXXX</small>
+        <!-- PESTAÑA: CANJEAR TOKEN -->
+        <div id="redeem-tab" class="tab-content active">
+            <div class="card">
+                <div class="header">
+                    <h1>🎁 Canjea tu Recompensa</h1>
+                    <p>Ingresa tu código para reclamar tu premio</p>
+                </div>
+
+                <form id="redeemForm">
+                    <div class="form-group">
+                        <label for="code">Código de Token</label>
+                        <input 
+                            type="text" 
+                            id="code" 
+                            class="code-input"
+                            placeholder="BLT-XXXX-XXXX"
+                            maxlength="14"
+                            required
+                            autocomplete="off"
+                        >
+                        <small style="color: #999; font-size: 0.85em;">Formato: XXX-XXXX-XXXX</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Tu Email</label>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            placeholder="tu@email.com"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Tu Teléfono</label>
+                        <input 
+                            type="tel" 
+                            id="phone" 
+                            placeholder="+54 9 11 1234-5678"
+                            required
+                        >
+                    </div>
+
+                    <button type="submit" class="btn" id="submitBtn">
+                        🎁 Canjear Ahora
+                    </button>
+                </form>
+
+                <div id="result" class="hidden"></div>
             </div>
+        </div>
 
-            <div class="form-group">
-                <label for="email">Tu Email</label>
-                <input 
-                    type="email" 
-                    id="email" 
-                    placeholder="tu@email.com"
-                    required
-                >
+        <!-- PESTAÑA: PANEL ADMIN -->
+        <div id="admin-tab" class="tab-content">
+            <div class="card">
+                <div class="header">
+                    <h1>🔐 Panel de Administración</h1>
+                    <p>Genera y gestiona tokens de recompensas</p>
+                </div>
+
+                <h2 style="color: #333; margin: 20px 0;">📊 Estadísticas</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Tokens Generados</div>
+                        <div class="stat-value" id="totalGenerated">0</div>
+                    </div>
+                    <div class="stat-card" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">
+                        <div class="stat-label">Tokens Canjeados</div>
+                        <div class="stat-value" id="totalRedeemed">0</div>
+                    </div>
+                    <div class="stat-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                        <div class="stat-label">Tasa de Canje</div>
+                        <div class="stat-value" id="redemptionRate">0%</div>
+                    </div>
+                </div>
+
+                <h2 style="color: #333; margin: 20px 0;">🎫 Generar Nuevos Tokens</h2>
+                
+                <div id="alert" class="hidden"></div>
+
+                <form id="generateForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="prefix">Prefijo (3 letras)</label>
+                            <input 
+                                type="text" 
+                                id="prefix" 
+                                maxlength="3" 
+                                value="BLT"
+                                required
+                                style="text-transform: uppercase;"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="value">Valor del Token</label>
+                            <select id="value" required>
+                                <option value="20">20 puntos - 🍟 Papas Fritas</option>
+                                <option value="50" selected>50 puntos - 🍔 Hamburguesa</option>
+                                <option value="100">100 puntos - 🍺 Cerveza</option>
+                                <option value="200">200 puntos - 🎉 Combo Premium</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="quantity">Cantidad</label>
+                            <input 
+                                type="number" 
+                                id="quantity" 
+                                min="1" 
+                                max="10" 
+                                value="1"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="customerEmail">Email Cliente (opcional)</label>
+                            <input 
+                                type="email" 
+                                id="customerEmail" 
+                                placeholder="cliente@email.com"
+                            >
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn" id="generateBtn">
+                        🎁 Generar Tokens
+                    </button>
+                </form>
+
+                <div id="generatedTokens" class="tokens-list hidden"></div>
             </div>
-
-            <div class="form-group">
-                <label for="phone">Tu Teléfono</label>
-                <input 
-                    type="tel" 
-                    id="phone" 
-                    placeholder="+54 9 11 1234-5678"
-                    required
-                >
-            </div>
-
-            <button type="submit" class="btn" id="submitBtn">
-                🎁 Canjear Ahora
-            </button>
-        </form>
-
-        <div id="result" class="hidden"></div>
-
-        <div class="footer">
-            <p>🔒 Conexión segura</p>
         </div>
     </div>
 
@@ -275,6 +417,34 @@
     <script>
         const API_URL = 'https://script.google.com/macros/s/AKfycbwuAGx7vCunAdVbU6SiUYhx-zPsGPAMUzApxKDRQSMWqWZ5FM47PZQ_cH6ilSzA5t9tMA/exec';
 
+        // ====================================
+        // CAMBIAR PESTAÑAS
+        // ====================================
+        function showTab(tabName) {
+            // Ocultar todos los contenidos
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Desactivar todos los botones de pestaña
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Mostrar pestaña seleccionada
+            if (tabName === 'redeem') {
+                document.getElementById('redeem-tab').classList.add('active');
+                document.querySelectorAll('.tab')[0].classList.add('active');
+            } else {
+                document.getElementById('admin-tab').classList.add('active');
+                document.querySelectorAll('.tab')[1].classList.add('active');
+                loadStats(); // Cargar estadísticas al abrir admin
+            }
+        }
+
+        // ====================================
+        // CANJEAR TOKEN
+        // ====================================
         const form = document.getElementById('redeemForm');
         const codeInput = document.getElementById('code');
         const emailInput = document.getElementById('email');
@@ -325,7 +495,7 @@
             }
 
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span class="loader"></span> Procesando...';
+            submitBtn.innerHTML = '⏳ Procesando...';
 
             const url = `${API_URL}?action=redeem&code=${code}&email=${email}&phone=${phone}`;
             window.location.href = url;
@@ -348,6 +518,7 @@
             const message = urlParams.get('message');
 
             if (status === 'success') {
+                showTab('redeem');
                 resultDiv.className = 'result success';
                 resultDiv.innerHTML = `
                     <div class="reward-icon">🎉</div>
@@ -358,31 +529,10 @@
                 resultDiv.classList.remove('hidden');
                 form.reset();
                 
-                const duration = 3 * 1000;
-                const animationEnd = Date.now() + duration;
-                const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
-
-                function randomInRange(min, max) {
-                    return Math.random() * (max - min) + min;
-                }
-
-                const interval = setInterval(function() {
-                    const timeLeft = animationEnd - Date.now();
-                    if (timeLeft <= 0) {
-                        return clearInterval(interval);
-                    }
-                    const particleCount = 50 * (timeLeft / duration);
-                    confetti(Object.assign({}, defaults, { 
-                        particleCount, 
-                        origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } 
-                    }));
-                    confetti(Object.assign({}, defaults, { 
-                        particleCount, 
-                        origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } 
-                    }));
-                }, 250);
+                launchConfetti();
                 
             } else if (status === 'error') {
+                showTab('redeem');
                 resultDiv.className = 'result error';
                 resultDiv.innerHTML = `
                     <div class="reward-icon">⚠️</div>
@@ -396,6 +546,141 @@
                 window.history.replaceState({}, document.title, window.location.pathname);
             }
         });
+
+        function launchConfetti() {
+            const duration = 3 * 1000;
+            const animationEnd = Date.now() + duration;
+            const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+            function randomInRange(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+
+            const interval = setInterval(function() {
+                const timeLeft = animationEnd - Date.now();
+                if (timeLeft <= 0) {
+                    return clearInterval(interval);
+                }
+                const particleCount = 50 * (timeLeft / duration);
+                confetti(Object.assign({}, defaults, { 
+                    particleCount, 
+                    origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } 
+                }));
+                confetti(Object.assign({}, defaults, { 
+                    particleCount, 
+                    origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } 
+                }));
+            }, 250);
+        }
+
+        // ====================================
+        // PANEL ADMIN
+        // ====================================
+        const generateForm = document.getElementById('generateForm');
+        const generateBtn = document.getElementById('generateBtn');
+        const alertDiv = document.getElementById('alert');
+        const generatedTokensDiv = document.getElementById('generatedTokens');
+
+        const totalGeneratedEl = document.getElementById('totalGenerated');
+        const totalRedeemedEl = document.getElementById('totalRedeemed');
+        const redemptionRateEl = document.getElementById('redemptionRate');
+
+        async function loadStats() {
+            try {
+                const response = await fetch(`${API_URL}?action=stats`);
+                const data = await response.json();
+
+                if (data.success) {
+                    totalGeneratedEl.textContent = data.stats.totalGenerated;
+                    totalRedeemedEl.textContent = data.stats.totalRedeemed;
+                    
+                    const rate = data.stats.totalGenerated > 0 
+                        ? ((data.stats.totalRedeemed / data.stats.totalGenerated) * 100).toFixed(1)
+                        : 0;
+                    redemptionRateEl.textContent = rate + '%';
+                }
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+
+        generateForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const prefix = document.getElementById('prefix').value.toUpperCase();
+            const value = document.getElementById('value').value;
+            const quantity = parseInt(document.getElementById('quantity').value);
+            const customerEmail = document.getElementById('customerEmail').value;
+
+            if (prefix.length !== 3 || !/^[A-Z]+$/.test(prefix)) {
+                showAlert('El prefijo debe ser 3 letras', 'error');
+                return;
+            }
+
+            generateBtn.disabled = true;
+            generateBtn.textContent = '⏳ Generando...';
+
+            try {
+                const response = await fetch(`${API_URL}?action=generate&prefix=${prefix}&value=${value}&quantity=${quantity}&email=${customerEmail}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    showAlert(`✅ ${quantity} token(s) generado(s) exitosamente`, 'success');
+                    displayTokens(data.tokens);
+                    loadStats();
+                    generateForm.reset();
+                    document.getElementById('prefix').value = 'BLT';
+                } else {
+                    showAlert('❌ Error generando tokens: ' + data.message, 'error');
+                }
+            } catch (error) {
+                showAlert('❌ Error de conexión', 'error');
+            } finally {
+                generateBtn.disabled = false;
+                generateBtn.textContent = '🎁 Generar Tokens';
+            }
+        });
+
+        function displayTokens(tokens) {
+            generatedTokensDiv.innerHTML = '<h3 style="color: #333;">✨ Tokens Generados</h3>';
+            
+            tokens.forEach(token => {
+                const tokenDiv = document.createElement('div');
+                tokenDiv.className = 'token-item';
+                tokenDiv.innerHTML = `
+                    <div>
+                        <div class="token-code">${token.code}</div>
+                        <small>Valor: ${token.value} puntos | ${getRewardName(token.value)}</small>
+                    </div>
+                    <div>
+                        <img src="${token.qrCode}" alt="QR" class="token-qr">
+                    </div>
+                `;
+                generatedTokensDiv.appendChild(tokenDiv);
+            });
+
+            generatedTokensDiv.classList.remove('hidden');
+        }
+
+        function getRewardName(value) {
+            const rewards = {
+                20: '🍟 Papas Fritas',
+                50: '🍔 Hamburguesa',
+                100: '🍺 Cerveza',
+                200: '🎉 Combo Premium'
+            };
+            return rewards[value] || 'Recompensa';
+        }
+
+        function showAlert(message, type) {
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.textContent = message;
+            alertDiv.classList.remove('hidden');
+
+            setTimeout(() => {
+                alertDiv.classList.add('hidden');
+            }, 5000);
+        }
     </script>
 </body>
 </html>
